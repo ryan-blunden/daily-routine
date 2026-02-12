@@ -70,6 +70,13 @@
         padding-bottom: 4mm;
       }
 
+      .header-meta {
+        display: grid;
+        justify-items: end;
+        gap: 2mm;
+        min-width: 58mm;
+      }
+
       .title {
         font-family: "Bebas Neue", sans-serif;
         letter-spacing: 0.08em;
@@ -83,44 +90,49 @@
       }
 
       .today-date {
-        margin: 1.5mm 0 0 0;
-        min-width: 60mm;
+        margin: 0;
         text-align: right;
         font-size: 9pt;
         letter-spacing: 0.05em;
         color: var(--muted);
       }
 
-      .status-row {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 2.2mm;
-      }
-
-      .status-card {
-        border: 1px solid var(--line);
-        border-left: 3px solid var(--accent);
+      .header-progress {
+        --progress: 0%;
+        min-width: 34mm;
+        border: 0.8px solid rgba(143, 160, 184, 0.28);
         border-radius: 2mm;
-        padding: 2.4mm;
+        padding: 1.6mm 2.2mm;
+        position: relative;
+        overflow: hidden;
       }
 
-      .status-card b {
+      .header-progress::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: var(--progress);
+        background: linear-gradient(90deg, rgba(55, 208, 255, 0.28), rgba(75, 255, 190, 0.18));
+        pointer-events: none;
+        transition: width 220ms ease;
+      }
+
+      .header-progress > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .header-progress b {
         display: block;
-        font-size: 8pt;
+        font-size: 7pt;
         letter-spacing: 0.07em;
         color: var(--muted);
-        margin-bottom: 1.4mm;
+        margin-bottom: 0.8mm;
         text-transform: uppercase;
       }
 
-      .status-card i {
-        display: block;
-        border-bottom: 1px solid var(--line);
-        height: 4.7mm;
-      }
-
-      .status-card .metric {
-        font-size: 11pt;
+      .header-progress .metric {
+        font-size: 10pt;
         font-weight: 700;
         color: var(--ink);
         letter-spacing: 0.02em;
@@ -134,14 +146,30 @@
         align-content: start;
       }
 
-      .goals-box {
+      .top-panels {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+        gap: 5.2mm;
+        align-items: stretch;
+      }
+
+      .top-panels > * {
+        min-width: 0;
+      }
+
+      .goals-box,
+      .deliverables-box {
         border: 1px solid var(--line);
         border-radius: 2.5mm;
         padding: 3.4mm 3.6mm;
         background: rgba(255, 255, 255, 0.015);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       }
 
-      .goals-box h2 {
+      .goals-box h2,
+      .deliverables-box h2 {
         margin: 0 0 1.8mm 0;
         font-size: 8pt;
         letter-spacing: 0.07em;
@@ -153,9 +181,9 @@
         list-style: none;
         margin: 0;
         padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.2mm 8mm;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.2mm 5mm;
       }
 
       .goals-list li {
@@ -167,6 +195,7 @@
         padding: 0.4mm 0;
         cursor: default;
         flex: 0 1 auto;
+        min-width: 0;
       }
 
       .goal-count-wrap {
@@ -191,6 +220,29 @@
       .goal-count:focus {
         outline: none;
         border-color: var(--accent);
+      }
+
+      .deliverables-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 1.2mm;
+      }
+
+      .deliverables-list li {
+        display: grid;
+        grid-template-columns: 3.5mm 1fr;
+        gap: 2mm;
+        align-items: start;
+        font-size: 7pt;
+        line-height: 1.35;
+        padding: 0.4mm 0;
+        cursor: pointer;
+      }
+
+      .deliverables-list .task-label {
+        word-break: break-word;
       }
 
       .block {
@@ -238,7 +290,7 @@
         gap: 1.1mm;
       }
 
-      li:nth-child(n + 5) {
+      .block li:nth-child(n + 5) {
         display: none;
       }
 
@@ -289,6 +341,33 @@
           gap: 24px;
         }
 
+        .top-panels {
+          grid-template-columns: 1fr;
+        }
+
+        .goals-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .header {
+          grid-template-columns: 1fr;
+          gap: 2.8mm;
+        }
+
+        .header-meta {
+          justify-items: start;
+        }
+
+        .today-date {
+          text-align: left;
+        }
+
+      }
+
+      @media (max-width: 640px) {
+        .goals-list {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -297,16 +376,24 @@
       <main class="page">
         <header class="header">
           <h1 class="title" id="planner-title">DAILY <strong>SETLIST</strong></h1>
-          <p class="today-date" id="today-date"></p>
+          <div class="header-meta">
+            <p class="today-date" id="today-date"></p>
+            <article class="header-progress" aria-label="Daily status">
+              <b>Progress</b>
+              <span class="metric" id="tasks-percent">0%</span>
+            </article>
+          </div>
         </header>
 
-        <section class="status-row" aria-label="Daily status">
-          <article class="status-card"><b>Progress</b><span class="metric" id="tasks-percent">0%</span></article>
-        </section>
-
-        <section class="goals-box" aria-label="Daily goals">
-          <h2>Daily Goals</h2>
-          <ul class="goals-list" id="daily-goals"></ul>
+        <section class="top-panels" aria-label="Goals and deliverables">
+          <section class="goals-box" aria-label="Daily goals">
+            <h2>Daily Goals</h2>
+            <ul class="goals-list" id="daily-goals"></ul>
+          </section>
+          <section class="deliverables-box" aria-label="Top 3 deliverables">
+            <h2>Top 3 Deliverables</h2>
+            <ul class="deliverables-list" id="top-deliverables"></ul>
+          </section>
         </section>
 
         <section class="schedule" aria-label="Routine schedule" id="schedule"></section>
@@ -319,7 +406,9 @@
       const STORAGE_PREFIX = "daily-setlist-state-v1:";
       const titleEl = document.getElementById("planner-title");
       const todayDateEl = document.getElementById("today-date");
+      const headerProgressEl = document.querySelector(".header-progress");
       const goalsEl = document.getElementById("daily-goals");
+      const deliverablesEl = document.getElementById("top-deliverables");
       const scheduleEl = document.getElementById("schedule");
       const percentEl = document.getElementById("tasks-percent");
 
@@ -413,6 +502,7 @@
           titlePrefix: String(raw?.title_prefix || "DAILY"),
           titleAccent: String(raw?.title_accent || "SETLIST"),
           goals: Array.isArray(raw?.goals) ? raw.goals.map((g) => String(g)) : [],
+          topDeliverables: Array.isArray(raw?.top_deliverables) ? raw.top_deliverables.map((d) => String(d)) : [],
           blocks
         };
       };
@@ -565,6 +655,30 @@
         });
       };
 
+      const renderDeliverables = (deliverables) => {
+        deliverablesEl.textContent = "";
+        deliverables.slice(0, 3).forEach((item, itemIndex) => {
+          const li = document.createElement("li");
+          li.setAttribute("role", "group");
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          const taskId = `deliverable-${itemIndex}-${slug(item)}`;
+          checkbox.dataset.taskId = taskId;
+          checkbox.id = `task-${taskId}`;
+          checkbox.name = `task-${taskId}`;
+          checkbox.setAttribute("aria-label", item);
+
+          const label = document.createElement("label");
+          label.className = "task-text task-label";
+          label.textContent = item;
+          label.htmlFor = checkbox.id;
+
+          li.append(checkbox, label);
+          deliverablesEl.append(li);
+        });
+      };
+
       const today = toLocalISODate(new Date());
       const todayLabel = new Intl.DateTimeFormat("en-GB", {
         weekday: "long",
@@ -607,8 +721,17 @@
         const done = checks.filter((cb) => cb.checked).length;
         const percent = total ? Math.round((done / total) * 100) : 0;
         percentEl.textContent = `${percent}%`;
+        if (headerProgressEl) {
+          headerProgressEl.style.setProperty("--progress", `${percent}%`);
+        }
 
         checks.forEach((cb) => {
+          const text = cb.nextElementSibling;
+          if (text) text.classList.toggle("done", cb.checked);
+        });
+
+        const deliverableChecks = [...document.querySelectorAll('.deliverables-list input[type="checkbox"]')];
+        deliverableChecks.forEach((cb) => {
           const text = cb.nextElementSibling;
           if (text) text.classList.toggle("done", cb.checked);
         });
@@ -654,6 +777,7 @@
       const plannerData = await loadPlannerData();
       setHeaderTitle(plannerData.titlePrefix, plannerData.titleAccent);
       renderGoals(plannerData.goals);
+      renderDeliverables(plannerData.topDeliverables);
       renderBlocks(plannerData.blocks);
       loadState();
     })();
