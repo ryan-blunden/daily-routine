@@ -10,7 +10,7 @@ items = ["10 min meditation", "Letter from my future self", "Puppy play"]
 [[blocks]]
 title = "LBA Deep Work"
 time = "6:45-9:15"
-description = "High-output coding rounds."
+description = "<strong>Intention</strong>: High-output coding rounds."
 items = [
   "30 minute block",
   "30 minute block",
