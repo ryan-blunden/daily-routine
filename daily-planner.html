@@ -59,8 +59,8 @@
         content: "";
         position: absolute;
         inset: 0;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.008) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(255, 255, 255, 0.004) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.004) 1px, transparent 1px);
         background-size: 18px 18px;
         pointer-events: none;
       }
@@ -86,47 +86,13 @@
         color: var(--accent);
       }
 
-      .meta {
-        display: grid;
-        gap: 2.5mm;
-        min-width: 56mm;
-      }
-
-      .line-field {
-        display: grid;
-        grid-template-columns: 14mm 1fr;
-        gap: 2mm;
-        align-items: end;
-        font-size: 10pt;
-      }
-
-      .line-field span {
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 8pt;
-      }
-
-      .line-field i {
-        border-bottom: 1px solid var(--line);
-        height: 5mm;
-        display: block;
-      }
-
-      .line-field input {
-        width: 100%;
-        height: 5mm;
-        border: 0;
-        border-bottom: 1px solid var(--line);
-        background: transparent;
-        color: var(--ink);
-        font: inherit;
+      .today-date {
+        margin: 1.5mm 0 0 0;
+        min-width: 60mm;
+        text-align: right;
         font-size: 9pt;
-      }
-
-      .line-field input:focus {
-        outline: none;
-        border-bottom-color: var(--accent);
+        letter-spacing: 0.05em;
+        color: var(--muted);
       }
 
       .status-row {
@@ -275,11 +241,7 @@
       <main class="page">
         <header class="header">
           <h1 class="title">DAILY <strong>SETLIST</strong></h1>
-          <div class="meta">
-            <label class="line-field"><span>Date</span><input id="planner-date" type="date" /></label>
-            <label class="line-field"><span>Theme</span><input id="planner-theme" type="text" /></label>
-            <label class="line-field"><span>Sleep</span><input id="planner-sleep" type="text" /></label>
-          </div>
+          <p class="today-date" id="today-date"></p>
         </header>
 
         <section class="status-row" aria-label="Daily status">
@@ -416,10 +378,7 @@
   <script>
     (() => {
       const STORAGE_PREFIX = "daily-setlist-state-v1:";
-      const metaKey = "daily-setlist-meta-v1";
-      const dateInput = document.getElementById("planner-date");
-      const themeInput = document.getElementById("planner-theme");
-      const sleepInput = document.getElementById("planner-sleep");
+      const todayDateEl = document.getElementById("today-date");
       const doneEl = document.getElementById("tasks-done");
       const percentEl = document.getElementById("tasks-percent");
       const blocksDoneEl = document.getElementById("blocks-done");
@@ -439,29 +398,15 @@
           .replace(/^-+|-+$/g, "");
 
       const today = toLocalISODate(new Date());
-      dateInput.value = today;
+      const todayLabel = new Intl.DateTimeFormat("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }).format(new Date());
+      todayDateEl.textContent = todayLabel;
 
-      const saveMeta = () => {
-        localStorage.setItem(
-          metaKey,
-          JSON.stringify({
-            theme: themeInput.value || "",
-            sleep: sleepInput.value || ""
-          })
-        );
-      };
-
-      const loadMeta = () => {
-        const raw = localStorage.getItem(metaKey);
-        if (!raw) return;
-        try {
-          const meta = JSON.parse(raw);
-          themeInput.value = meta.theme || "";
-          sleepInput.value = meta.sleep || "";
-        } catch (_) {}
-      };
-
-      const keyForDate = () => STORAGE_PREFIX + (dateInput.value || today);
+      const keyForDate = () => STORAGE_PREFIX + today;
       const blocks = [...document.querySelectorAll(".block")];
 
       blocks.forEach((block, blockIndex) => {
@@ -557,14 +502,6 @@
         }
       });
 
-      dateInput.addEventListener("change", () => {
-        loadState();
-      });
-
-      themeInput.addEventListener("input", saveMeta);
-      sleepInput.addEventListener("input", saveMeta);
-
-      loadMeta();
       loadState();
     })();
   </script>
