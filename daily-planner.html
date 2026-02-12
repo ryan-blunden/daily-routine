@@ -163,6 +163,14 @@
         letter-spacing: 0.06em;
       }
 
+      .block .desc {
+        margin: 0 0 1.1mm 0;
+        min-height: 3.2mm;
+        font-size: 6.7pt;
+        color: #9bb0c9;
+        letter-spacing: 0.01em;
+      }
+
       ul {
         list-style: none;
         margin: 2mm 0 0 0;
@@ -325,6 +333,7 @@
           ? raw.blocks.map((b) => ({
               title: String(b?.title || ""),
               time: String(b?.time || ""),
+              description: String(b?.description || ""),
               items: Array.isArray(b?.items) ? b.items.map((i) => String(i)) : []
             }))
           : [];
@@ -373,6 +382,10 @@
           time.className = "time";
           time.textContent = block.time;
 
+          const desc = document.createElement("p");
+          desc.className = "desc";
+          desc.textContent = block.description;
+
           const list = document.createElement("ul");
           const cappedItems = block.items.slice(0, 4);
           cappedItems.forEach((item, itemIndex) => {
@@ -395,7 +408,7 @@
             list.append(li);
           });
 
-          article.append(heading, time, list);
+          article.append(heading, time, desc, list);
           scheduleEl.append(article);
         });
       };

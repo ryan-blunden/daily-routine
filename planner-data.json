@@ -5,61 +5,73 @@
     {
       "title": "Morning Activation",
       "time": "6:00-6:45",
+      "description": "Prime focus and mindset.",
       "items": ["10 min meditation", "Letter from my future self", "Puppy play"]
     },
     {
       "title": "LBA Deep Work",
       "time": "6:45-9:15",
-      "items": ["4 x 30 cycles", "5 min movement reset between rounds", "After 4 cycles -> 15 min longer break"]
+      "description": "High-output coding rounds.",
+      "items": ["30 minute block", "30 minute block", "30 minute block", "30 minute block"]
     },
     {
       "title": "Midday Reset",
       "time": "9:30-10:00",
+      "description": "Refuel and reset before next sprint.",
       "items": ["Puppy", "Olive oil + MCT oil", "Coffee"]
     },
     {
       "title": "RyanBlunden.dev Deep Work",
       "time": "10:00-12:00",
+      "description": "Build and ship priority features.",
       "items": ["3 x 30 min cycles", "5 min resets", "Exercise snack between rounds"]
     },
     {
       "title": "Lunch Reset",
       "time": "12:00-12:45",
+      "description": "Recovery window and quick reset.",
       "items": ["Lunch", "Puppy", "Coffee"]
     },
     {
       "title": "Drums Core Skills Development",
       "time": "12:45-13:30",
+      "description": "Technique quality over speed.",
       "items": ["Technical drum pad work", "Timing and accuracy", "Rudiments"]
     },
     {
       "title": "Production",
       "time": "13:30-15:00",
+      "description": "Record pieces to camera.",
       "items": ["3 x 30 cycles", "5 min resets", "Output-focussed"]
     },
     {
       "title": "L&D / Research Block",
       "time": "15:00-16:00",
+      "description": "Deliberate learning and exploration.",
       "items": ["2 x 30 min focus cycles", "Skills development", "Free-form research"]
     },
     {
       "title": "Admin / Errands / Overflow / Gym",
       "time": "16:00-16:45",
+      "description": "Close loops and handle overflow.",
       "items": ["Daily review and planning", "Errands or gym"]
     },
     {
       "title": "Creative Work",
       "time": "16:45-18:00",
+      "description": "Free creation and musical expression.",
       "items": ["60 min drumming and creative work", "15 min shower"]
     },
     {
       "title": "Evening",
       "time": "18:00-21:00",
+      "description": "Social and personal reset block.",
       "items": ["Prepare dinner", "Walk with partner", "Friends and socializing", "Creativity (song writing, poetry, extra reading)"]
     },
     {
       "title": "Sleep Readiness",
       "time": "21:00-22:00",
+      "description": "Wind down for deep sleep quality.",
       "items": ["10 min meditation", "Stretching", "Gratitude journalling"]
     }
   ]
