@@ -1,0 +1,82 @@
+title_prefix = "DAILY"
+title_accent = "SETLIST"
+
+[[blocks]]
+title = "Morning Activation"
+time = "6:00-6:45"
+items = [
+  "10 min meditation",
+  "Sunlight and stretch",
+  "Letter from my future self",
+  "Puppy play",
+]
+
+[[blocks]]
+title = "LBA Deep Work"
+time = "6:45-9:15"
+items = [
+  "30 minute block",
+  "30 minute block",
+  "30 minute block",
+  "30 minute block",
+]
+
+[[blocks]]
+title = "Midday Reset"
+time = "9:30-10:00"
+items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
+
+[[blocks]]
+title = "RyanBlunden.dev Deep Work"
+time = "10:00-12:00"
+items = [
+  "30 minute block",
+  "30 minute block",
+  "30 minute block",
+  "30 minute block",
+]
+
+[[blocks]]
+title = "Lunch Reset"
+time = "12:00-12:45"
+items = ["Lunch", "Puppy", "Coffee"]
+
+[[blocks]]
+title = "Drums Core Skills Development"
+time = "12:45-13:30"
+items = ["Technical drum pad work", "Timing and accuracy", "Rudiments"]
+
+[[blocks]]
+title = "Production"
+time = "13:30-15:00"
+items = ["30 minute block", "30 minute block", "30 minute block"]
+
+[[blocks]]
+title = "L&D / Research Block"
+time = "15:00-16:00"
+items = ["30 minute block", "30 minute block"]
+
+[[blocks]]
+title = "Admin / Errands / Overflow / Gym"
+time = "16:00-16:45"
+items = ["Daily review and planning", "Errands or gym"]
+
+[[blocks]]
+title = "Creative Work"
+time = "16:45-18:00"
+items = ["60 min drumming and creative work", "15 min shower"]
+
+[[blocks]]
+title = "Evening"
+time = "18:00-21:00"
+items = [
+  "Prepare dinner",
+  "Walk with partner",
+  "Friends and socializing",
+  "Creativity (song writing, poetry, extra reading)",
+]
+
+[[blocks]]
+title = "Sleep Readiness"
+time = "21:00-22:00"
+items = ["10 min meditation", "Stretching", "Gratitude journalling"]

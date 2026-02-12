@@ -219,7 +219,7 @@
     <div class="stage">
       <main class="page">
         <header class="header">
-          <h1 class="title">DAILY <strong>SETLIST</strong></h1>
+          <h1 class="title" id="planner-title">DAILY <strong>SETLIST</strong></h1>
           <p class="today-date" id="today-date"></p>
         </header>
 
@@ -229,134 +229,17 @@
           <article class="status-card"><b>Blocks Cleared</b><span class="metric" id="blocks-done">0/0</span></article>
         </section>
 
-        <section class="schedule" aria-label="Routine schedule">
-          <article class="block">
-            <h2>Morning Activation</h2>
-            <p class="time">6:00-6:45</p>
-            <ul>
-              <li>10 min meditation</li>
-              <li>Letter from my future self</li>
-              <li>Puppy play</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>LBA Deep Work</h2>
-            <p class="time">6:45-9:15</p>
-            <ul>
-              <li>4 x 30 cycles</li>
-              <li>5 min movement reset between rounds</li>
-              <li>After 4 cycles -> 15 min longer break</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Midday Reset</h2>
-            <p class="time">9:30-10:00</p>
-            <ul>
-              <li>Puppy</li>
-              <li>Olive oil + MCT oil</li>
-              <li>Coffee</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>RyanBlunden.dev Deep Work</h2>
-            <p class="time">10:00-12:00</p>
-            <ul>
-              <li>3 x 30 min cycles</li>
-              <li>5 min resets</li>
-              <li>Exercise snack between rounds</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Lunch Reset</h2>
-            <p class="time">12:00-12:45</p>
-            <ul>
-              <li>Lunch</li>
-              <li>Puppy</li>
-              <li>Coffee</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Drums Core Skills Development</h2>
-            <p class="time">12:45-13:30</p>
-            <ul>
-              <li>Technical drum pad work</li>
-              <li>Timing and accuracy</li>
-              <li>Rudiments</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Production</h2>
-            <p class="time">13:30-15:00</p>
-            <ul>
-              <li>3 x 30 cycles</li>
-              <li>5 min resets</li>
-              <li>Output-focussed</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>L&amp;D / Research Block</h2>
-            <p class="time">15:00-16:00</p>
-            <ul>
-              <li>2 x 30 min focus cycles</li>
-              <li>Skills development</li>
-              <li>Free-form research</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Admin / Errands / Overflow / Gym</h2>
-            <p class="time">16:00-16:45</p>
-            <ul>
-              <li>Daily review and planning</li>
-              <li>Errands or gym</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Creative Work</h2>
-            <p class="time">16:45-18:00</p>
-            <ul>
-              <li>60 min drumming and creative work</li>
-              <li>15 min shower</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Evening</h2>
-            <p class="time">18:00-21:00</p>
-            <ul>
-              <li>Prepare dinner</li>
-              <li>Walk with partner</li>
-              <li>Friends and socializing</li>
-              <li>Creativity (song writing, poetry, reading)</li>
-            </ul>
-          </article>
-
-          <article class="block">
-            <h2>Sleep Readiness</h2>
-            <p class="time">21:00-22:00</p>
-            <ul>
-              <li>10 min meditation</li>
-              <li>Stretching</li>
-              <li>Gratitude journalling</li>
-            </ul>
-          </article>
-        </section>
+        <section class="schedule" aria-label="Routine schedule" id="schedule"></section>
 
       </main>
     </div>
   </body>
   <script>
-    (() => {
+    (async () => {
       const STORAGE_PREFIX = "daily-setlist-state-v1:";
+      const titleEl = document.getElementById("planner-title");
       const todayDateEl = document.getElementById("today-date");
+      const scheduleEl = document.getElementById("schedule");
       const doneEl = document.getElementById("tasks-done");
       const percentEl = document.getElementById("tasks-percent");
       const blocksDoneEl = document.getElementById("blocks-done");
@@ -369,10 +252,153 @@
 
       const slug = (s) =>
         s
+          .toString()
           .toLowerCase()
           .replace(/&/g, "and")
           .replace(/[^a-z0-9]+/g, "-")
           .replace(/^-+|-+$/g, "");
+
+      const unquote = (s) => {
+        if (!s) return "";
+        const q = s.trim();
+        if (q.startsWith('"') && q.endsWith('"')) {
+          return q
+            .slice(1, -1)
+            .replace(/\\"/g, '"')
+            .replace(/\\\\/g, "\\");
+        }
+        return q;
+      };
+
+      const parseTomlValue = (raw) => {
+        const value = raw.trim();
+        if (value.startsWith("[") && value.endsWith("]")) {
+          const inner = value.slice(1, -1).trim();
+          if (!inner) return [];
+          const matches = inner.match(/"((?:\\"|[^"])*)"/g) || [];
+          return matches.map((m) => unquote(m));
+        }
+        if (value === "true") return true;
+        if (value === "false") return false;
+        if (/^-?\d+(\.\d+)?$/.test(value)) return Number(value);
+        return unquote(value);
+      };
+
+      const parseTomlPlanner = (toml) => {
+        const data = { blocks: [] };
+        let currentBlock = null;
+        const lines = toml.split(/\r?\n/);
+        for (let i = 0; i < lines.length; i += 1) {
+          const rawLine = lines[i];
+          const line = rawLine.replace(/\s+#.*$/, "").trim();
+          if (!line) continue;
+          if (line === "[[blocks]]") {
+            currentBlock = { title: "", time: "", items: [] };
+            data.blocks.push(currentBlock);
+            continue;
+          }
+          const match = line.match(/^([A-Za-z0-9_-]+)\s*=\s*(.+)$/);
+          if (!match) continue;
+          const [, key, initialRawValue] = match;
+          let rawValue = initialRawValue;
+
+          if (rawValue.trim().startsWith("[") && !rawValue.trim().endsWith("]")) {
+            const parts = [rawValue];
+            while (i + 1 < lines.length) {
+              i += 1;
+              const nextLine = lines[i].replace(/\s+#.*$/, "").trim();
+              if (!nextLine) continue;
+              parts.push(nextLine);
+              if (nextLine.endsWith("]")) break;
+            }
+            rawValue = parts.join(" ");
+          }
+
+          const target = currentBlock || data;
+          target[key] = parseTomlValue(rawValue);
+        }
+        return data;
+      };
+
+      const normalizePlannerData = (raw) => {
+        const blocks = Array.isArray(raw?.blocks)
+          ? raw.blocks.map((b) => ({
+              title: String(b?.title || ""),
+              time: String(b?.time || ""),
+              items: Array.isArray(b?.items) ? b.items.map((i) => String(i)) : []
+            }))
+          : [];
+
+        return {
+          titlePrefix: String(raw?.title_prefix || "DAILY"),
+          titleAccent: String(raw?.title_accent || "SETLIST"),
+          blocks
+        };
+      };
+
+      const fetchText = async (path) => {
+        const res = await fetch(path, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Unable to load ${path}`);
+        return res.text();
+      };
+
+      const loadPlannerData = async () => {
+        try {
+          const tomlText = await fetchText("planner-data.toml");
+          return normalizePlannerData(parseTomlPlanner(tomlText));
+        } catch (_) {
+          const jsonText = await fetchText("planner-data.json");
+          return normalizePlannerData(JSON.parse(jsonText));
+        }
+      };
+
+      const setHeaderTitle = (titlePrefix, titleAccent) => {
+        titleEl.textContent = "";
+        titleEl.append(document.createTextNode(`${titlePrefix} `));
+        const accent = document.createElement("strong");
+        accent.textContent = titleAccent;
+        titleEl.append(accent);
+      };
+
+      const renderBlocks = (blocks) => {
+        scheduleEl.textContent = "";
+        blocks.forEach((block, blockIndex) => {
+          const article = document.createElement("article");
+          article.className = "block";
+
+          const heading = document.createElement("h2");
+          heading.textContent = block.title;
+
+          const time = document.createElement("p");
+          time.className = "time";
+          time.textContent = block.time;
+
+          const list = document.createElement("ul");
+          const cappedItems = block.items.slice(0, 4);
+          cappedItems.forEach((item, itemIndex) => {
+            const li = document.createElement("li");
+            li.setAttribute("role", "group");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            const taskId = `${blockIndex}-${slug(block.title)}-${itemIndex}`;
+            checkbox.dataset.taskId = taskId;
+            checkbox.id = `task-${taskId}`;
+            checkbox.name = `task-${taskId}`;
+            checkbox.setAttribute("aria-label", item);
+
+            const span = document.createElement("span");
+            span.className = "task-text";
+            span.textContent = item;
+
+            li.append(checkbox, span);
+            list.append(li);
+          });
+
+          article.append(heading, time, list);
+          scheduleEl.append(article);
+        });
+      };
 
       const today = toLocalISODate(new Date());
       const todayLabel = new Intl.DateTimeFormat("en-GB", {
@@ -384,31 +410,8 @@
       todayDateEl.textContent = todayLabel;
 
       const keyForDate = () => STORAGE_PREFIX + today;
-      const blocks = [...document.querySelectorAll(".block")];
-
-      blocks.forEach((block, blockIndex) => {
-        const title = block.querySelector("h2")?.textContent || "block";
-        const idPrefix = `${blockIndex}-${slug(title)}`;
-        const items = [...block.querySelectorAll("li")];
-        items.forEach((li, itemIndex) => {
-          const text = li.textContent.trim();
-          li.textContent = "";
-          li.setAttribute("role", "group");
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          const taskId = `${idPrefix}-${itemIndex}`;
-          checkbox.dataset.taskId = taskId;
-          checkbox.id = `task-${taskId}`;
-          checkbox.name = `task-${taskId}`;
-          checkbox.setAttribute("aria-label", text);
-          const span = document.createElement("span");
-          span.className = "task-text";
-          span.textContent = text;
-          li.append(checkbox, span);
-        });
-      });
-
       const getCheckboxes = () => [...document.querySelectorAll('li input[type="checkbox"]')];
+      const getBlocks = () => [...document.querySelectorAll(".block")];
 
       const readState = () => {
         const raw = localStorage.getItem(keyForDate());
@@ -433,6 +436,7 @@
         const total = checks.length;
         const done = checks.filter((cb) => cb.checked).length;
         const percent = total ? Math.round((done / total) * 100) : 0;
+        const blocks = getBlocks();
         const blockTotals = blocks.map((b) => {
           const list = [...b.querySelectorAll('input[type="checkbox"]')];
           return list.length && list.every((cb) => cb.checked);
@@ -464,6 +468,9 @@
         }
       });
 
+      const plannerData = await loadPlannerData();
+      setHeaderTitle(plannerData.titlePrefix, plannerData.titleAccent);
+      renderBlocks(plannerData.blocks);
       loadState();
     })();
   </script>
