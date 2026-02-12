@@ -10,6 +10,8 @@
       const deliverablesEl = document.getElementById("top-deliverables");
       const scheduleEl = document.getElementById("schedule");
       const percentEl = document.getElementById("tasks-percent");
+      const goalsPercentEl = document.getElementById("goals-percent");
+      const deliverablesPercentEl = document.getElementById("deliverables-percent");
 
       const toLocalISODate = (d) => {
         const off = d.getTimezoneOffset();
@@ -223,6 +225,9 @@
 
       const renderBlocks = (blocks) => {
         scheduleEl.textContent = "";
+        const desktopColumns = 3;
+        const scheduleRows = Math.max(1, Math.ceil(blocks.length / desktopColumns));
+        scheduleEl.style.setProperty("--schedule-rows", String(scheduleRows));
         blocks.forEach((block, blockIndex) => {
           const article = document.createElement("article");
           article.className = "block";
@@ -373,18 +378,28 @@
         });
 
         const deliverableChecks = [...document.querySelectorAll('.deliverables-list input[type="checkbox"]')];
+        const deliverablesTotal = deliverableChecks.length;
+        const deliverablesDone = deliverableChecks.filter((cb) => cb.checked).length;
+        const deliverablesPercent = deliverablesTotal ? Math.round((deliverablesDone / deliverablesTotal) * 100) : 0;
+        if (deliverablesPercentEl) deliverablesPercentEl.textContent = `(${deliverablesPercent}%)`;
         deliverableChecks.forEach((cb) => {
           const text = cb.nextElementSibling;
           if (text) text.classList.toggle("done", cb.checked);
         });
 
         const goalInputs = [...document.querySelectorAll(".goals-list .goal-count[data-task-id]")];
+        const goalsTotal = goalInputs.length;
+        let goalsDone = 0;
         goalInputs.forEach((input) => {
           const target = Number(input.dataset.goalTarget || "0");
           const value = Number(input.value || "0");
+          const isDone = target > 0 ? value >= target : value > 0;
+          if (isDone) goalsDone += 1;
           const label = input.closest("li")?.querySelector(".task-label");
-          if (label) label.classList.toggle("done", target > 0 && value >= target);
+          if (label) label.classList.toggle("done", isDone);
         });
+        const goalsPercent = goalsTotal ? Math.round((goalsDone / goalsTotal) * 100) : 0;
+        if (goalsPercentEl) goalsPercentEl.textContent = `(${goalsPercent}%)`;
       };
 
       const loadState = () => {
