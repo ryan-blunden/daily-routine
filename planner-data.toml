@@ -1,5 +1,12 @@
 title_prefix = "DAILY"
 title_accent = "SETLIST"
+goals = [
+  "50 push ups",
+  "50 squats",
+  "20 pull ups",
+  "30 minutes meditation",
+  "1 hour drumming",
+]
 
 [[blocks]]
 title = "Morning Activation"
@@ -10,7 +17,7 @@ items = ["10 min meditation", "Letter from my future self", "Puppy play"]
 [[blocks]]
 title = "LBA Deep Work"
 time = "6:45-9:15"
-description = "<strong>Intention</strong>: High-output coding rounds."
+description = "Refine my niche to be about creativity and play. Start the initial offer."
 items = [
   "30 minute block",
   "30 minute block",
@@ -27,7 +34,7 @@ items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
 [[blocks]]
 title = "RyanBlunden.dev Deep Work"
 time = "10:00-12:00"
-description = "Build and ship priority features."
+description = "Script v1 for embeddings video"
 items = ["3 x 30 min cycles", "5 min resets", "Exercise snack between rounds"]
 
 [[blocks]]
@@ -45,13 +52,13 @@ items = ["Technical drum pad work", "Timing and accuracy", "Rudiments"]
 [[blocks]]
 title = "Production"
 time = "13:30-15:00"
-description = "Record pieces to camera."
+description = "Embeddings sample code"
 items = ["3 x 30 cycles", "5 min resets", "Output-focussed"]
 
 [[blocks]]
 title = "L&D / Research Block"
 time = "15:00-16:00"
-description = "Deliberate learning and exploration."
+description = "Migrate notes to Obsidian"
 items = ["2 x 30 min focus cycles", "Skills development", "Free-form research"]
 
 [[blocks]]
@@ -81,4 +88,9 @@ items = [
 title = "Sleep Readiness"
 time = "21:00-22:00"
 description = "Wind down for deep sleep quality."
-items = ["10 min meditation", "Stretching", "Gratitude journalling"]
+items = [
+  "Daily reflection journalling",
+  "10 min meditation",
+  "Stretching",
+  "Gratitude journalling",
+]

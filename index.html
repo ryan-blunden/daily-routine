@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daily Routine Planner</title>
+    <title>Daily Setlist</title>
     <link rel="icon" href="data:," />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -93,7 +93,7 @@
 
       .status-row {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr;
         gap: 2.2mm;
       }
 
@@ -132,6 +132,65 @@
         column-gap: 5.2mm;
         row-gap: 5.2mm;
         align-content: start;
+      }
+
+      .goals-box {
+        border: 1px solid var(--line);
+        border-radius: 2.5mm;
+        padding: 3.4mm 3.6mm;
+        background: rgba(255, 255, 255, 0.015);
+      }
+
+      .goals-box h2 {
+        margin: 0 0 1.8mm 0;
+        font-size: 8pt;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .goals-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2mm 8mm;
+      }
+
+      .goals-list li {
+        display: flex;
+        align-items: center;
+        gap: 1.2mm;
+        font-size: 7.2pt;
+        line-height: 1.35;
+        padding: 0.4mm 0;
+        cursor: default;
+        flex: 0 1 auto;
+      }
+
+      .goal-count-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 1.2mm;
+      }
+
+      .goal-count {
+        width: 9mm;
+        height: 4.8mm;
+        border: 1px solid var(--line);
+        border-radius: 1.1mm;
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--ink);
+        font: inherit;
+        font-size: 7.1pt;
+        text-align: center;
+        padding: 0.2mm 0.6mm;
+      }
+
+      .goal-count:focus {
+        outline: none;
+        border-color: var(--accent);
       }
 
       .block {
@@ -202,6 +261,7 @@
         border: 1px solid var(--line);
         border-radius: 0.8mm;
         background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
       }
 
       li input[type="checkbox"]:checked {
@@ -215,11 +275,20 @@
         text-decoration: line-through;
       }
 
+      li .task-label {
+        cursor: pointer;
+      }
+
+      .goals-list .task-label {
+        cursor: text;
+      }
+
       @media (max-width: 980px) {
         .page {
           padding: 34px;
           gap: 24px;
         }
+
       }
     </style>
   </head>
@@ -232,9 +301,12 @@
         </header>
 
         <section class="status-row" aria-label="Daily status">
-          <article class="status-card"><b>Tasks Done</b><span class="metric" id="tasks-done">0/0</span></article>
-          <article class="status-card"><b>Completion</b><span class="metric" id="tasks-percent">0%</span></article>
-          <article class="status-card"><b>Blocks Cleared</b><span class="metric" id="blocks-done">0/0</span></article>
+          <article class="status-card"><b>Progress</b><span class="metric" id="tasks-percent">0%</span></article>
+        </section>
+
+        <section class="goals-box" aria-label="Daily goals">
+          <h2>Daily Goals</h2>
+          <ul class="goals-list" id="daily-goals"></ul>
         </section>
 
         <section class="schedule" aria-label="Routine schedule" id="schedule"></section>
@@ -247,10 +319,9 @@
       const STORAGE_PREFIX = "daily-setlist-state-v1:";
       const titleEl = document.getElementById("planner-title");
       const todayDateEl = document.getElementById("today-date");
+      const goalsEl = document.getElementById("daily-goals");
       const scheduleEl = document.getElementById("schedule");
-      const doneEl = document.getElementById("tasks-done");
       const percentEl = document.getElementById("tasks-percent");
-      const blocksDoneEl = document.getElementById("blocks-done");
 
       const toLocalISODate = (d) => {
         const off = d.getTimezoneOffset();
@@ -341,6 +412,7 @@
         return {
           titlePrefix: String(raw?.title_prefix || "DAILY"),
           titleAccent: String(raw?.title_accent || "SETLIST"),
+          goals: Array.isArray(raw?.goals) ? raw.goals.map((g) => String(g)) : [],
           blocks
         };
       };
@@ -441,16 +513,55 @@
             checkbox.name = `task-${taskId}`;
             checkbox.setAttribute("aria-label", item);
 
-            const span = document.createElement("span");
-            span.className = "task-text";
-            span.textContent = item;
+            const label = document.createElement("label");
+            label.className = "task-text task-label";
+            label.textContent = item;
+            label.htmlFor = checkbox.id;
 
-            li.append(checkbox, span);
+            li.append(checkbox, label);
             list.append(li);
           });
 
           article.append(heading, time, desc, list);
           scheduleEl.append(article);
+        });
+      };
+
+      const renderGoals = (goals) => {
+        goalsEl.textContent = "";
+        goals.forEach((goal, goalIndex) => {
+          const li = document.createElement("li");
+          li.setAttribute("role", "group");
+
+          const goalText = String(goal).trim();
+          const goalMatch = goalText.match(/^(\d{1,3})\s+(.+)$/);
+          const target = goalMatch ? Number(goalMatch[1]) : 0;
+
+          const goalInput = document.createElement("input");
+          goalInput.type = "text";
+          goalInput.className = "goal-count";
+          goalInput.inputMode = "numeric";
+          goalInput.pattern = "[0-9]*";
+          goalInput.autocomplete = "off";
+          goalInput.placeholder = "00";
+          const goalId = `goal-${goalIndex}-${slug(goal)}`;
+          goalInput.dataset.taskId = goalId;
+          goalInput.dataset.goalTarget = String(target);
+          goalInput.id = `task-${goalId}`;
+          goalInput.name = `task-${goalId}`;
+          goalInput.setAttribute("aria-label", goal);
+
+          const label = document.createElement("label");
+          label.className = "task-text task-label";
+          label.textContent = goalText;
+          label.htmlFor = goalInput.id;
+
+          const counterWrap = document.createElement("div");
+          counterWrap.className = "goal-count-wrap";
+          counterWrap.append(goalInput);
+
+          li.append(counterWrap, label);
+          goalsEl.append(li);
         });
       };
 
@@ -464,8 +575,8 @@
       todayDateEl.textContent = todayLabel;
 
       const keyForDate = () => STORAGE_PREFIX + today;
-      const getCheckboxes = () => [...document.querySelectorAll('li input[type="checkbox"]')];
-      const getBlocks = () => [...document.querySelectorAll(".block")];
+      const getStateInputs = () => [...document.querySelectorAll('[data-task-id]')];
+      const getTaskCheckboxes = () => [...document.querySelectorAll('.schedule li input[type="checkbox"]')];
 
       const readState = () => {
         const raw = localStorage.getItem(keyForDate());
@@ -479,51 +590,70 @@
 
       const writeState = () => {
         const payload = {};
-        getCheckboxes().forEach((cb) => {
-          payload[cb.dataset.taskId] = cb.checked;
+        getStateInputs().forEach((el) => {
+          if (el.type === "checkbox") {
+            payload[el.dataset.taskId] = el.checked;
+          } else {
+            const digits = String(el.value || "").replace(/\D/g, "").slice(0, 2);
+            payload[el.dataset.taskId] = digits ? Number(digits) : 0;
+          }
         });
         localStorage.setItem(keyForDate(), JSON.stringify(payload));
       };
 
       const updateMetrics = () => {
-        const checks = getCheckboxes();
+        const checks = getTaskCheckboxes();
         const total = checks.length;
         const done = checks.filter((cb) => cb.checked).length;
         const percent = total ? Math.round((done / total) * 100) : 0;
-        const blocks = getBlocks();
-        const blockTotals = blocks.map((b) => {
-          const list = [...b.querySelectorAll('input[type="checkbox"]')];
-          return list.length && list.every((cb) => cb.checked);
-        });
-        const blockDone = blockTotals.filter(Boolean).length;
-
-        doneEl.textContent = `${done}/${total}`;
         percentEl.textContent = `${percent}%`;
-        blocksDoneEl.textContent = `${blockDone}/${blocks.length}`;
 
         checks.forEach((cb) => {
           const text = cb.nextElementSibling;
           if (text) text.classList.toggle("done", cb.checked);
         });
+
+        const goalInputs = [...document.querySelectorAll(".goals-list .goal-count[data-task-id]")];
+        goalInputs.forEach((input) => {
+          const target = Number(input.dataset.goalTarget || "0");
+          const value = Number(input.value || "0");
+          const label = input.closest("li")?.querySelector(".task-label");
+          if (label) label.classList.toggle("done", target > 0 && value >= target);
+        });
       };
 
       const loadState = () => {
         const state = readState();
-        getCheckboxes().forEach((cb) => {
-          cb.checked = Boolean(state[cb.dataset.taskId]);
+        getStateInputs().forEach((el) => {
+          const saved = state[el.dataset.taskId];
+          if (el.type === "checkbox") {
+            el.checked = Boolean(saved);
+          } else {
+            const digits = String(saved ?? "").replace(/\D/g, "").slice(0, 2);
+            el.value = digits;
+          }
         });
         updateMetrics();
       };
 
       document.addEventListener("change", (e) => {
-        if (e.target.matches('input[type="checkbox"]')) {
+        if (e.target.matches('input[type="checkbox"], input.goal-count')) {
           writeState();
           updateMetrics();
         }
       });
 
+      document.addEventListener("input", (e) => {
+        if (!e.target.matches("input.goal-count")) return;
+        const digits = e.target.value.replace(/\D/g, "").slice(0, 2);
+        e.target.value = digits;
+        writeState();
+        updateMetrics();
+      });
+
       const plannerData = await loadPlannerData();
       setHeaderTitle(plannerData.titlePrefix, plannerData.titleAccent);
+      renderGoals(plannerData.goals);
       renderBlocks(plannerData.blocks);
       loadState();
     })();

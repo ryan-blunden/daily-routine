@@ -1,0 +1,23 @@
+You are working in this repo and must update `planner-data.toml` for today’s intentional plan.
+
+Task:
+1. Read `planner-data.toml`.
+2. Identify the three routine blocks that correspond to:
+   - Deep Work
+   - Production
+   - R&D / Research
+3. Prompt me to provide a concise, specific `description` for each of those three blocks.
+4. After I answer, update only those `description` fields in `planner-data.toml` (preserve TOML formatting/style as much as possible).
+5. Show me a clear diff or summary of exactly what changed and ask for confirmation.
+6. If I say anything other than explicit approval, do not commit.
+7. If I reply `approved`, then:
+   - `git add planner-data.toml`
+   - `git commit -m "Update daily Deep Work, Production, and R&D descriptions"`
+   - `git push`
+8. After pushing, report the commit hash and branch.
+
+Rules:
+- Do not change any unrelated fields.
+- If any of the three blocks cannot be found unambiguously, ask me which block title to target before editing.
+- Keep the interaction concise and practical.
+- Do not use interactive git editors; use non-interactive commands only.

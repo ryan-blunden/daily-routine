@@ -1,0 +1,34 @@
+You are working in this repo and must update `planner-data.toml` for today’s intentional plan.
+
+Task:
+1. Read `planner-data.toml`.
+2. Find these routine blocks (or closest exact title matches):
+   - LBA Deep Work
+   - RyanBlunden.dev Deep Work
+   - Production
+   - R&D / Research (or equivalent research block title)
+3. Prompt me progressively, one question at a time, in this style:
+   - "What is your LBA Deep Work goal today?"
+   - wait for my answer
+   - "What is your RyanBlunden.dev Deep Work goal today?"
+   - wait for my answer
+   - "What is your Production goal today?"
+   - wait for my answer
+   - "What is your R&D/Research goal today?"
+   - wait for my answer
+4. Use my answers to update only the `description` fields for those matching blocks in `planner-data.toml`.
+5. Show me a clear diff/summary of exactly what changed and ask for confirmation.
+6. If I say anything other than explicit approval, do not commit.
+7. If I reply exactly `approved`, then:
+   - `git add planner-data.toml`
+   - `git commit -m "Update daily block descriptions"`
+   - `git push`
+8. After pushing, report the branch and commit hash.
+
+Rules:
+- Ask one question at a time (no multi-question dump).
+- Keep each prompt short and direct.
+- Preserve TOML style/format as much as possible.
+- Do not change unrelated fields.
+- If any target block is ambiguous or missing, ask me which exact block title to use before editing.
+- Do not use interactive git editors; use non-interactive git commands only.
