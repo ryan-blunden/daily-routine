@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Routine Planner</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0b0f14;
+        --panel: #101722;
+        --ink: #eaf0fa;
+        --muted: #8fa0b8;
+        --line: #1d2938;
+        --accent: #37d0ff;
+        --accent-2: #4bffbe;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 14% 12%, rgba(55, 208, 255, 0.16), transparent 42%),
+          radial-gradient(circle at 86% 88%, rgba(75, 255, 190, 0.14), transparent 40%),
+          var(--bg);
+        font-family: "Manrope", sans-serif;
+        color: var(--ink);
+      }
+
+      .stage {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        background: linear-gradient(160deg, #0f1622 0%, #0c1119 55%, #0b1017 100%);
+        border: 1px solid #263547;
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.55);
+        padding: 12mm;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: 8mm;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .page::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.008) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
+        background-size: 18px 18px;
+        pointer-events: none;
+      }
+
+      .header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: start;
+        gap: 4mm;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 4mm;
+      }
+
+      .title {
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 0.08em;
+        font-size: 13mm;
+        line-height: 0.9;
+        margin: 0;
+      }
+
+      .title strong {
+        color: var(--accent);
+      }
+
+      .meta {
+        display: grid;
+        gap: 2.5mm;
+        min-width: 56mm;
+      }
+
+      .line-field {
+        display: grid;
+        grid-template-columns: 14mm 1fr;
+        gap: 2mm;
+        align-items: end;
+        font-size: 10pt;
+      }
+
+      .line-field span {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 8pt;
+      }
+
+      .line-field i {
+        border-bottom: 1px solid var(--line);
+        height: 5mm;
+        display: block;
+      }
+
+      .line-field input {
+        width: 100%;
+        height: 5mm;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        font-size: 9pt;
+      }
+
+      .line-field input:focus {
+        outline: none;
+        border-bottom-color: var(--accent);
+      }
+
+      .status-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2.2mm;
+      }
+
+      .status-card {
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        border-radius: 2mm;
+        padding: 2.4mm;
+      }
+
+      .status-card b {
+        display: block;
+        font-size: 8pt;
+        letter-spacing: 0.07em;
+        color: var(--muted);
+        margin-bottom: 1.4mm;
+        text-transform: uppercase;
+      }
+
+      .status-card i {
+        display: block;
+        border-bottom: 1px solid var(--line);
+        height: 4.7mm;
+      }
+
+      .status-card .metric {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: 0.02em;
+      }
+
+      .schedule {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 5.2mm;
+        row-gap: 5.2mm;
+        align-content: start;
+      }
+
+      .block {
+        border: 1px solid var(--line);
+        border-radius: 2.5mm;
+        padding: 2.8mm 3mm;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0));
+        margin: 0;
+        height: 42mm;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .block h2 {
+        margin: 0 0 0.6mm 0;
+        min-height: 4.8mm;
+        font-size: 7.7pt;
+        line-height: 1.2;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .block .time {
+        margin: 0 0 0.8mm 0;
+        min-height: 3.1mm;
+        font-size: 6.9pt;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+      }
+
+      ul {
+        list-style: none;
+        margin: 2mm 0 0 0;
+        padding: 0;
+        display: grid;
+        gap: 1.1mm;
+      }
+
+      li:nth-child(n + 5) {
+        display: none;
+      }
+
+      li {
+        display: grid;
+        grid-template-columns: 3.5mm 1fr;
+        gap: 2mm;
+        align-items: start;
+        font-size: 7pt;
+        line-height: 1.35;
+        padding: 0.4mm 0;
+        cursor: pointer;
+      }
+
+      li input[type="checkbox"] {
+        appearance: none;
+        width: 3.2mm;
+        height: 3.2mm;
+        margin-top: 0.25mm;
+        border: 1px solid var(--line);
+        border-radius: 0.8mm;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      li input[type="checkbox"]:checked {
+        border-color: var(--accent);
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 0 1px rgba(11, 15, 20, 0.45) inset;
+      }
+
+      li .task-text.done {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 0;
+        }
+
+        html,
+        body {
+          background: #fff;
+        }
+
+        .stage {
+          padding: 0;
+        }
+
+        .page {
+          margin: 0;
+          box-shadow: none;
+          border: none;
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <main class="page">
+        <header class="header">
+          <h1 class="title">DAILY <strong>SETLIST</strong></h1>
+          <div class="meta">
+            <label class="line-field"><span>Date</span><input id="planner-date" type="date" /></label>
+            <label class="line-field"><span>Theme</span><input id="planner-theme" type="text" /></label>
+            <label class="line-field"><span>Sleep</span><input id="planner-sleep" type="text" /></label>
+          </div>
+        </header>
+
+        <section class="status-row" aria-label="Daily status">
+          <article class="status-card"><b>Tasks Done</b><span class="metric" id="tasks-done">0/0</span></article>
+          <article class="status-card"><b>Completion</b><span class="metric" id="tasks-percent">0%</span></article>
+          <article class="status-card"><b>Blocks Cleared</b><span class="metric" id="blocks-done">0/0</span></article>
+          <article class="status-card"><b>Streak</b><span class="metric" id="task-streak">0</span></article>
+        </section>
+
+        <section class="schedule" aria-label="Routine schedule">
+          <article class="block">
+            <h2>Morning Activation</h2>
+            <p class="time">6:00-6:45</p>
+            <ul>
+              <li>10 min meditation</li>
+              <li>Letter from my future self</li>
+              <li>Puppy play</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>LBA Deep Work</h2>
+            <p class="time">6:45-9:15</p>
+            <ul>
+              <li>4 x 30 cycles</li>
+              <li>5 min movement reset between rounds</li>
+              <li>After 4 cycles -> 15 min longer break</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Midday Reset</h2>
+            <p class="time">9:30-10:00</p>
+            <ul>
+              <li>Puppy</li>
+              <li>Olive oil + MCT oil</li>
+              <li>Coffee</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>RyanBlunden.dev Deep Work</h2>
+            <p class="time">10:00-12:00</p>
+            <ul>
+              <li>3 x 30 min cycles</li>
+              <li>5 min resets</li>
+              <li>Exercise snack between rounds</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Lunch Reset</h2>
+            <p class="time">12:00-12:45</p>
+            <ul>
+              <li>Lunch</li>
+              <li>Puppy</li>
+              <li>Coffee</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Drums Core Skills Development</h2>
+            <p class="time">12:45-13:30</p>
+            <ul>
+              <li>Technical drum pad work</li>
+              <li>Timing and accuracy</li>
+              <li>Rudiments</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Production</h2>
+            <p class="time">13:30-15:00</p>
+            <ul>
+              <li>3 x 30 cycles</li>
+              <li>5 min resets</li>
+              <li>Output-focussed</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>L&amp;D / Research Block</h2>
+            <p class="time">15:00-16:00</p>
+            <ul>
+              <li>2 x 30 min focus cycles</li>
+              <li>Skills development</li>
+              <li>Free-form research</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Admin / Errands / Overflow / Gym</h2>
+            <p class="time">16:00-16:45</p>
+            <ul>
+              <li>Daily review and planning</li>
+              <li>Errands or gym</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Creative Work</h2>
+            <p class="time">16:45-18:00</p>
+            <ul>
+              <li>60 min drumming and creative work</li>
+              <li>15 min shower</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Evening</h2>
+            <p class="time">18:00-21:00</p>
+            <ul>
+              <li>Prepare dinner</li>
+              <li>Walk with partner</li>
+              <li>Friends and socializing</li>
+              <li>Creativity (song writing, poetry, reading)</li>
+            </ul>
+          </article>
+
+          <article class="block">
+            <h2>Sleep Readiness</h2>
+            <p class="time">21:00-22:00</p>
+            <ul>
+              <li>10 min meditation</li>
+              <li>Stretching</li>
+              <li>Gratitude journalling</li>
+            </ul>
+          </article>
+        </section>
+
+      </main>
+    </div>
+  </body>
+  <script>
+    (() => {
+      const STORAGE_PREFIX = "daily-setlist-state-v1:";
+      const metaKey = "daily-setlist-meta-v1";
+      const dateInput = document.getElementById("planner-date");
+      const themeInput = document.getElementById("planner-theme");
+      const sleepInput = document.getElementById("planner-sleep");
+      const doneEl = document.getElementById("tasks-done");
+      const percentEl = document.getElementById("tasks-percent");
+      const blocksDoneEl = document.getElementById("blocks-done");
+      const streakEl = document.getElementById("task-streak");
+
+      const toLocalISODate = (d) => {
+        const off = d.getTimezoneOffset();
+        const local = new Date(d.getTime() - off * 60000);
+        return local.toISOString().slice(0, 10);
+      };
+
+      const slug = (s) =>
+        s
+          .toLowerCase()
+          .replace(/&/g, "and")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+      const today = toLocalISODate(new Date());
+      dateInput.value = today;
+
+      const saveMeta = () => {
+        localStorage.setItem(
+          metaKey,
+          JSON.stringify({
+            theme: themeInput.value || "",
+            sleep: sleepInput.value || ""
+          })
+        );
+      };
+
+      const loadMeta = () => {
+        const raw = localStorage.getItem(metaKey);
+        if (!raw) return;
+        try {
+          const meta = JSON.parse(raw);
+          themeInput.value = meta.theme || "";
+          sleepInput.value = meta.sleep || "";
+        } catch (_) {}
+      };
+
+      const keyForDate = () => STORAGE_PREFIX + (dateInput.value || today);
+      const blocks = [...document.querySelectorAll(".block")];
+
+      blocks.forEach((block, blockIndex) => {
+        const title = block.querySelector("h2")?.textContent || "block";
+        const idPrefix = `${blockIndex}-${slug(title)}`;
+        const items = [...block.querySelectorAll("li")];
+        items.forEach((li, itemIndex) => {
+          const text = li.textContent.trim();
+          li.textContent = "";
+          li.setAttribute("role", "group");
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          const taskId = `${idPrefix}-${itemIndex}`;
+          checkbox.dataset.taskId = taskId;
+          checkbox.id = `task-${taskId}`;
+          checkbox.name = `task-${taskId}`;
+          checkbox.setAttribute("aria-label", text);
+          const span = document.createElement("span");
+          span.className = "task-text";
+          span.textContent = text;
+          li.append(checkbox, span);
+        });
+      });
+
+      const getCheckboxes = () => [...document.querySelectorAll('li input[type="checkbox"]')];
+
+      const readState = () => {
+        const raw = localStorage.getItem(keyForDate());
+        if (!raw) return {};
+        try {
+          return JSON.parse(raw);
+        } catch (_) {
+          return {};
+        }
+      };
+
+      const writeState = () => {
+        const payload = {};
+        getCheckboxes().forEach((cb) => {
+          payload[cb.dataset.taskId] = cb.checked;
+        });
+        localStorage.setItem(keyForDate(), JSON.stringify(payload));
+      };
+
+      const computeStreak = (checks) => {
+        let streak = 0;
+        let best = 0;
+        checks.forEach((cb) => {
+          if (cb.checked) {
+            streak += 1;
+            best = Math.max(best, streak);
+          } else {
+            streak = 0;
+          }
+        });
+        return best;
+      };
+
+      const updateMetrics = () => {
+        const checks = getCheckboxes();
+        const total = checks.length;
+        const done = checks.filter((cb) => cb.checked).length;
+        const percent = total ? Math.round((done / total) * 100) : 0;
+        const blockTotals = blocks.map((b) => {
+          const list = [...b.querySelectorAll('input[type="checkbox"]')];
+          return list.length && list.every((cb) => cb.checked);
+        });
+        const blockDone = blockTotals.filter(Boolean).length;
+
+        doneEl.textContent = `${done}/${total}`;
+        percentEl.textContent = `${percent}%`;
+        blocksDoneEl.textContent = `${blockDone}/${blocks.length}`;
+        streakEl.textContent = String(computeStreak(checks));
+
+        checks.forEach((cb) => {
+          const text = cb.nextElementSibling;
+          if (text) text.classList.toggle("done", cb.checked);
+        });
+      };
+
+      const loadState = () => {
+        const state = readState();
+        getCheckboxes().forEach((cb) => {
+          cb.checked = Boolean(state[cb.dataset.taskId]);
+        });
+        updateMetrics();
+      };
+
+      document.addEventListener("change", (e) => {
+        if (e.target.matches('input[type="checkbox"]')) {
+          writeState();
+          updateMetrics();
+        }
+      });
+
+      dateInput.addEventListener("change", () => {
+        loadState();
+      });
+
+      themeInput.addEventListener("input", saveMeta);
+      sleepInput.addEventListener("input", saveMeta);
+
+      loadMeta();
+      loadState();
+    })();
+  </script>
+</html>
