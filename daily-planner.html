@@ -26,10 +26,7 @@
       html,
       body {
         margin: 0;
-        background:
-          radial-gradient(circle at 14% 12%, rgba(55, 208, 255, 0.16), transparent 42%),
-          radial-gradient(circle at 86% 88%, rgba(75, 255, 190, 0.14), transparent 40%),
-          var(--bg);
+        background: var(--bg);
         font-family: "Manrope", sans-serif;
         color: var(--ink);
       }
@@ -42,15 +39,14 @@
       }
 
       .page {
-        width: 210mm;
-        min-height: 297mm;
-        background: linear-gradient(160deg, #0f1622 0%, #0c1119 55%, #0b1017 100%);
+        width: min(980px, 92vw);
+        background: var(--panel);
         border: 1px solid #263547;
         box-shadow: 0 22px 70px rgba(0, 0, 0, 0.55);
-        padding: 12mm;
+        padding: 46px;
         display: grid;
         grid-template-rows: auto auto 1fr;
-        gap: 8mm;
+        gap: 30px;
         position: relative;
         overflow: hidden;
       }
@@ -97,7 +93,7 @@
 
       .status-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 2.2mm;
       }
 
@@ -142,7 +138,7 @@
         border: 1px solid var(--line);
         border-radius: 2.5mm;
         padding: 2.8mm 3mm;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0));
+        background: rgba(255, 255, 255, 0.015);
         margin: 0;
         height: 42mm;
         display: flex;
@@ -211,27 +207,10 @@
         text-decoration: line-through;
       }
 
-      @media print {
-        @page {
-          size: A4;
-          margin: 0;
-        }
-
-        html,
-        body {
-          background: #fff;
-        }
-
-        .stage {
-          padding: 0;
-        }
-
+      @media (max-width: 980px) {
         .page {
-          margin: 0;
-          box-shadow: none;
-          border: none;
-          print-color-adjust: exact;
-          -webkit-print-color-adjust: exact;
+          padding: 34px;
+          gap: 24px;
         }
       }
     </style>
@@ -248,7 +227,6 @@
           <article class="status-card"><b>Tasks Done</b><span class="metric" id="tasks-done">0/0</span></article>
           <article class="status-card"><b>Completion</b><span class="metric" id="tasks-percent">0%</span></article>
           <article class="status-card"><b>Blocks Cleared</b><span class="metric" id="blocks-done">0/0</span></article>
-          <article class="status-card"><b>Streak</b><span class="metric" id="task-streak">0</span></article>
         </section>
 
         <section class="schedule" aria-label="Routine schedule">
@@ -382,7 +360,6 @@
       const doneEl = document.getElementById("tasks-done");
       const percentEl = document.getElementById("tasks-percent");
       const blocksDoneEl = document.getElementById("blocks-done");
-      const streakEl = document.getElementById("task-streak");
 
       const toLocalISODate = (d) => {
         const off = d.getTimezoneOffset();
@@ -451,20 +428,6 @@
         localStorage.setItem(keyForDate(), JSON.stringify(payload));
       };
 
-      const computeStreak = (checks) => {
-        let streak = 0;
-        let best = 0;
-        checks.forEach((cb) => {
-          if (cb.checked) {
-            streak += 1;
-            best = Math.max(best, streak);
-          } else {
-            streak = 0;
-          }
-        });
-        return best;
-      };
-
       const updateMetrics = () => {
         const checks = getCheckboxes();
         const total = checks.length;
@@ -479,7 +442,6 @@
         doneEl.textContent = `${done}/${total}`;
         percentEl.textContent = `${percent}%`;
         blocksDoneEl.textContent = `${blockDone}/${blocks.length}`;
-        streakEl.textContent = String(computeStreak(checks));
 
         checks.forEach((cb) => {
           const text = cb.nextElementSibling;
