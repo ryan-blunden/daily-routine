@@ -389,16 +389,17 @@
 
         const goalInputs = [...document.querySelectorAll(".goals-list .goal-count[data-task-id]")];
         const goalsTotal = goalInputs.length;
-        let goalsDone = 0;
+        let goalsProgressSum = 0;
         goalInputs.forEach((input) => {
           const target = Number(input.dataset.goalTarget || "0");
           const value = Number(input.value || "0");
-          const isDone = target > 0 ? value >= target : value > 0;
-          if (isDone) goalsDone += 1;
+          const itemProgressRatio = target > 0 ? Math.min(value / target, 1) : value > 0 ? 1 : 0;
+          const isDone = itemProgressRatio >= 1;
+          goalsProgressSum += itemProgressRatio;
           const label = input.closest("li")?.querySelector(".task-label");
           if (label) label.classList.toggle("done", isDone);
         });
-        const goalsPercent = goalsTotal ? Math.round((goalsDone / goalsTotal) * 100) : 0;
+        const goalsPercent = goalsTotal ? Math.round((goalsProgressSum / goalsTotal) * 100) : 0;
         if (goalsPercentEl) goalsPercentEl.textContent = `(${goalsPercent}%)`;
       };
 
