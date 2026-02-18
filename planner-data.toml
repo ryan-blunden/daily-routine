@@ -22,7 +22,7 @@ items = ["10 min meditation", "Letter from my future self", "Puppy play"]
 [[blocks]]
 title = "Ryanblunden.dev Deep Work"
 time = "11:15am-1:45pm"
-description = "Add a silver niche and create very rought draft offers of both nices."
+description = "Finish video script and storyboard."
 items = [
   "30 minute block",
   "30 minute block",
@@ -39,7 +39,7 @@ items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
 [[blocks]]
 title = "LBA Deep Work"
 time = "2:30pm-4:30pm"
-description = "Version 1 of the embeddings script."
+description = "Finish first draft of offer."
 items = ["30 minute block", "30 minute block", "30 minute block"]
 
 [[blocks]]
@@ -55,9 +55,9 @@ description = "Technique quality over speed."
 items = ["Technical drum pad work", "Timing and accuracy", "Rudiments"]
 
 [[blocks]]
-title = "Production"
+title = "Video Production"
 time = "6:00pm-7:30pm"
-description = "Drum cover ready."
+description = "Complete work on video script if needed."
 items = ["3 x 30 cycles", "5 min resets", "Output-focussed"]
 
 [[blocks]]
