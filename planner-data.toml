@@ -8,9 +8,9 @@ goals = [
   "1 hour drumming",
 ]
 top_deliverables = [
-  "Decide LBA niche and draft of first offer",
-  "First draft of embeddings script",
-  "Drum cover ready",
+  "Finalize script and storyboard",
+  "First draft offer",
+  "Drum practice",
 ]
 
 [[blocks]]
@@ -20,7 +20,7 @@ description = "Prime focus and mindset."
 items = ["10 min meditation", "Letter from my future self", "Puppy play"]
 
 [[blocks]]
-title = "LBA Deep Work"
+title = "Ryanblunden.dev Deep Work"
 time = "11:15am-1:45pm"
 description = "Add a silver niche and create very rought draft offers of both nices."
 items = [
@@ -37,7 +37,7 @@ description = "Refuel and reset before next sprint."
 items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
 
 [[blocks]]
-title = "RyanBlunden.dev Deep Work"
+title = "LBA Deep Work"
 time = "2:30pm-4:30pm"
 description = "Version 1 of the embeddings script."
 items = ["30 minute block", "30 minute block", "30 minute block"]
