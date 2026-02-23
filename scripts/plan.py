@@ -78,16 +78,18 @@ def replace_block_description(lines: list[str], title: str, description: str) ->
 def read_top_deliverables(lines: list[str]) -> list[str]:
     start = None
     end = None
+    key_match = None
     for i, line in enumerate(lines):
-        if re.match(r"^\s*top_deliverables\s*=\s*\[\s*$", line.rstrip("\n")):
+        if re.match(r"^\s*(top_deliverables|deliverables)\s*=\s*\[\s*$", line.rstrip("\n")):
             start = i
+            key_match = True
             for j in range(i + 1, len(lines)):
                 if lines[j].strip() == "]":
                     end = j
                     break
             break
 
-    if start is None or end is None:
+    if start is None or end is None or not key_match:
         return ["", "", ""]
 
     values: list[str] = []
@@ -104,7 +106,7 @@ def read_top_deliverables(lines: list[str]) -> list[str]:
 def replace_or_add_top_deliverables(lines: list[str], deliverables: list[str]) -> None:
     escaped = [toml_escape(x) for x in deliverables]
     new_block = [
-        "top_deliverables = [\n",
+        "deliverables = [\n",
         f'  "{escaped[0]}",\n',
         f'  "{escaped[1]}",\n',
         f'  "{escaped[2]}",\n',
@@ -114,14 +116,14 @@ def replace_or_add_top_deliverables(lines: list[str], deliverables: list[str]) -
     start = None
     end = None
     for i, line in enumerate(lines):
-        if re.match(r"^\s*top_deliverables\s*=\s*\[\s*$", line.rstrip("\n")):
+        if re.match(r"^\s*(top_deliverables|deliverables)\s*=\s*\[\s*$", line.rstrip("\n")):
             start = i
             for j in range(i + 1, len(lines)):
                 if lines[j].strip() == "]":
                     end = j
                     break
             if end is None:
-                raise RuntimeError("Malformed top_deliverables array in planner-data.toml")
+                raise RuntimeError("Malformed deliverables array in planner-data.toml")
             break
 
     if start is not None and end is not None:

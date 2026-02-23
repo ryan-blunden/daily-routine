@@ -58,6 +58,7 @@ body {
 	gap: 4mm;
 	border-bottom: 1px solid var(--line);
 	padding-bottom: 4mm;
+	position: relative;
 }
 
 .header-meta {
@@ -65,7 +66,9 @@ body {
 	flex-direction: column;
 	align-items: flex-end;
 	gap: 1.8mm;
-	margin-left: auto;
+	position: absolute;
+	top: -8mm;
+	right: 0;
 	min-width: 66mm;
 }
 
@@ -101,6 +104,27 @@ body {
 .today-date:hover,
 .today-date:focus-visible {
 	color: var(--ink);
+	outline: none;
+}
+
+.day-start-time {
+	margin: 0;
+	padding: 0.8mm 1.6mm;
+	border: 1px solid rgba(143, 160, 184, 0.3);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.03);
+	color: var(--muted);
+	font: inherit;
+	font-size: 6.8pt;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.day-start-time:hover,
+.day-start-time:focus-visible {
+	color: var(--ink);
+	border-color: rgba(55, 208, 255, 0.65);
 	outline: none;
 }
 
@@ -193,7 +217,7 @@ body {
 
 .top-panels {
 	display: grid;
-	grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 5.2mm;
 	align-items: stretch;
 }
@@ -203,7 +227,8 @@ body {
 }
 
 .goals-box,
-.deliverables-box {
+.deliverables-box,
+.todos-box {
 	border: 1px solid var(--line);
 	border-radius: 2.5mm;
 	padding: 3.4mm 3.6mm;
@@ -214,7 +239,8 @@ body {
 }
 
 .goals-box h2,
-.deliverables-box h2 {
+.deliverables-box h2,
+.todos-box h2 {
 	margin: 0 0 1.8mm 0;
 	font-size: 8pt;
 	letter-spacing: 0.07em;
@@ -233,7 +259,7 @@ body {
 	margin: 0;
 	padding: 0;
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 1.2mm 5mm;
 }
 
@@ -273,7 +299,8 @@ body {
 	border-color: var(--accent);
 }
 
-.deliverables-list {
+.deliverables-list,
+.todos-list {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -281,7 +308,8 @@ body {
 	gap: 1.2mm;
 }
 
-.deliverables-list li {
+.deliverables-list li,
+.todos-list li {
 	display: grid;
 	grid-template-columns: 3.5mm 1fr;
 	gap: 2mm;
@@ -292,7 +320,8 @@ body {
 	cursor: pointer;
 }
 
-.deliverables-list .task-label {
+.deliverables-list .task-label,
+.todos-list .task-label {
 	word-break: break-word;
 }
 
@@ -305,6 +334,7 @@ body {
 	height: 45mm;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 }
 
 .block h2 {
@@ -315,6 +345,29 @@ body {
 	letter-spacing: 0.07em;
 	text-transform: uppercase;
 	color: var(--accent);
+}
+
+.block-edit {
+	position: absolute;
+	top: 2.3mm;
+	right: 2.4mm;
+	border: 1px solid rgba(143, 160, 184, 0.35);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.03);
+	color: var(--muted);
+	font: inherit;
+	font-size: 6pt;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	padding: 0.5mm 1.3mm;
+	cursor: pointer;
+}
+
+.block-edit:hover,
+.block-edit:focus-visible {
+	color: var(--ink);
+	border-color: rgba(55, 208, 255, 0.65);
+	outline: none;
 }
 
 .block .time {
@@ -422,8 +475,11 @@ li .task-label {
 	}
 
 	.header-meta {
+		position: static;
 		align-items: flex-start;
 		margin-left: 0;
+		margin-top: 0;
+		right: auto;
 	}
 
 	.today-date {

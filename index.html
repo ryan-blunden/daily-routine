@@ -22,6 +22,7 @@
                 <input id="date-picker" type="date" />
               </div>
             </div>
+            <button class="day-start-time" id="day-start-time" type="button" aria-label="Set day start time"></button>
             <article class="header-progress" aria-label="Daily status">
               <b>Progress</b>
               <span class="metric" id="tasks-percent">0%</span>
@@ -29,14 +30,18 @@
           </div>
         </header>
 
-        <section class="top-panels" aria-label="Goals and deliverables">
+        <section class="top-panels" aria-label="Goals, deliverables and todo list">
           <section class="goals-box" aria-label="Daily goals">
             <h2>Daily Goals <span class="section-progress" id="goals-percent">(0%)</span></h2>
             <ul class="goals-list" id="daily-goals"></ul>
           </section>
-          <section class="deliverables-box" aria-label="Top 3 deliverables">
-            <h2>Top 3 Deliverables <span class="section-progress" id="deliverables-percent">(0%)</span></h2>
+          <section class="deliverables-box" aria-label="Deliverables">
+            <h2>Deliverables <span class="section-progress" id="deliverables-percent">(0%)</span></h2>
             <ul class="deliverables-list" id="top-deliverables"></ul>
+          </section>
+          <section class="todos-box" aria-label="Todo list">
+            <h2>ToDo List <span class="section-progress" id="todos-percent">(0%)</span></h2>
+            <ul class="todos-list" id="todos-list"></ul>
           </section>
         </section>
 

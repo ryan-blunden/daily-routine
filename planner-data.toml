@@ -7,22 +7,19 @@ goals = [
   "30 minutes meditation",
   "1 hour drumming",
 ]
-top_deliverables = [
-  "Finalize script and storyboard",
-  "First draft offer",
-  "Drum practice",
-]
+top_deliverables = ["First draft offer", "Episode 2 script updated"]
+todos = ["Amazon", "Invoice Neil", "Video script research"]
 
 [[blocks]]
 title = "Morning Activation"
-time = "10:30am-11:15am"
+duration_minutes = 45
 description = "Prime focus and mindset."
-items = ["10 min meditation", "Letter from my future self", "Puppy play"]
+items = ["10 min meditation", "Read I am Ryan", "Puppy play"]
 
 [[blocks]]
-title = "Ryanblunden.dev Deep Work"
-time = "11:15am-1:45pm"
-description = "Finish video script and storyboard."
+title = "LBA Deep Work"
+duration_minutes = 150
+description = "Finish first draft offer."
 items = [
   "30 minute block",
   "30 minute block",
@@ -32,55 +29,60 @@ items = [
 
 [[blocks]]
 title = "Midday Reset"
-time = "2:00pm-2:30pm"
+duration_minutes = 30
 description = "Refuel and reset before next sprint."
 items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
 
 [[blocks]]
-title = "LBA Deep Work"
-time = "2:30pm-4:30pm"
-description = "Finish first draft of offer."
-items = ["30 minute block", "30 minute block", "30 minute block"]
+title = "RyanBlunden.dev deep work"
+duration_minutes = 120
+description = "Update episode 2."
+items = [
+  "30 minute block",
+  "30 minute block",
+  "30 minute block",
+  "30 minute block",
+]
 
 [[blocks]]
 title = "Lunch Reset"
-time = "4:30pm-5:15pm"
+duration_minutes = 45
 description = "Recovery window and quick reset."
 items = ["Lunch", "Puppy", "Coffee"]
 
 [[blocks]]
 title = "Drums Core Skills Development"
-time = "5:15pm-6:00pm"
+duration_minutes = 45
 description = "Technique quality over speed."
 items = ["Technical drum pad work", "Timing and accuracy", "Rudiments"]
 
 [[blocks]]
-title = "Video Production"
-time = "6:00pm-7:30pm"
-description = "Complete work on video script if needed."
-items = ["3 x 30 cycles", "5 min resets", "Output-focussed"]
+title = "Production Work"
+duration_minutes = 90
+description = "Drum cover ready (if time)."
+items = ["30 minute block", "30 minute block", "30 minute block"]
 
 [[blocks]]
 title = "L&D / Research Block"
-time = "7:30pm-8:30pm"
-description = "Migrate notes to Obsidian and first Projects / Tasks view"
+duration_minutes = 60
+description = "Video scripting AI tools."
 items = ["30 minute block", "30 minute block"]
 
 [[blocks]]
 title = "Admin / Errands / Overflow / Gym"
-time = "8:30pm-9:15pm"
+duration_minutes = 45
 description = "Close loops and handle overflow."
-items = ["Daily review and planning", "Errands or gym"]
+items = ["Daily review and planning", "Compile Bowie expenses", "Jaycar refund"]
 
 [[blocks]]
 title = "Creative Work"
-time = "9:15pm-10:30pm"
+duration_minutes = 75
 description = "Free creation and musical expression."
 items = ["60 min drumming and creative work", "Shower"]
 
 [[blocks]]
 title = "Evening"
-time = "10:30pm-1:30am"
+duration_minutes = 180
 description = "Social and personal reset block."
 items = [
   "Prepare dinner",
@@ -90,12 +92,21 @@ items = [
 ]
 
 [[blocks]]
-title = "Sleep Readiness"
-time = "1:30am-2:30am"
-description = "Wind down for deep sleep quality."
 items = [
   "Daily reflection journalling",
   "10 min meditation",
   "Stretching",
   "Gratitude journalling",
 ]
+title = "Sleep Readiness"
+duration_minutes = 60
+description = "Wind down for deep sleep quality."
+title_accent = "SETLIST"
+goals = [
+  "50 push ups",
+  "50 squats",
+  "20 pull ups",
+  "30 minutes meditation",
+  "1 hour drumming",
+]
+deliverables = ["First draft offer", "Episode 3 outline", "Drums website"]
