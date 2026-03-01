@@ -7,8 +7,8 @@ goals = [
   "30 minutes meditation",
   "1 hour drumming",
 ]
-top_deliverables = ["First draft offer", "Episode 2 script updated"]
-todos = ["Amazon", "Invoice Neil", "Video script research"]
+top_deliverables = ["First draft offer", "Episode 3 script v1"]
+todos = ["Amazon", "Pick up book", "Red rising series", "Jaycar refund"]
 
 [[blocks]]
 title = "Morning Activation"
@@ -36,7 +36,7 @@ items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
 [[blocks]]
 title = "RyanBlunden.dev deep work"
 duration_minutes = 120
-description = "Update episode 2."
+description = "Episode 3 draft."
 items = [
   "30 minute block",
   "30 minute block",
@@ -52,7 +52,7 @@ items = ["Lunch", "Puppy", "Coffee"]
 
 [[blocks]]
 title = "Drums Core Skills Development"
-duration_minutes = 45
+duration_minutes = 30
 description = "Technique quality over speed."
 items = ["Technical drum pad work", "Timing and accuracy", "Rudiments"]
 
@@ -65,7 +65,7 @@ items = ["30 minute block", "30 minute block", "30 minute block"]
 [[blocks]]
 title = "L&D / Research Block"
 duration_minutes = 60
-description = "Video scripting AI tools."
+description = "Creative research and practice definition."
 items = ["30 minute block", "30 minute block"]
 
 [[blocks]]
