@@ -8,7 +8,13 @@ goals = [
   "1 hour drumming",
 ]
 top_deliverables = ["First draft offer", "Episode 3 script v1"]
-todos = ["Amazon", "Pick up book", "Red rising series", "Jaycar refund"]
+todos = [
+  "Cancel insurance",
+  "Amazon",
+  "Pick up book",
+  "Red rising series",
+  "Jaycar refund",
+]
 
 [[blocks]]
 title = "Morning Activation"
@@ -17,9 +23,9 @@ description = "Prime focus and mindset."
 items = ["10 min meditation", "Read I am Ryan", "Puppy play"]
 
 [[blocks]]
-title = "LBA Deep Work"
+title = "RyanBlunden.dev deep work"
 duration_minutes = 150
-description = "Finish first draft offer."
+description = "."
 items = [
   "30 minute block",
   "30 minute block",
@@ -34,9 +40,9 @@ description = "Refuel and reset before next sprint."
 items = ["Puppy", "Olive oil + MCT oil", "Coffee"]
 
 [[blocks]]
-title = "RyanBlunden.dev deep work"
+title = "LBA deep work"
 duration_minutes = 120
-description = "Episode 3 draft."
+description = "Learning."
 items = [
   "30 minute block",
   "30 minute block",
